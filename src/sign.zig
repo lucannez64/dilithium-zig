@@ -94,7 +94,7 @@ pub fn crypto_sign_signature_internal(
     state.absorb(tr);
     state.absorb(pre);
     state.absorb(m);
-    state.finalize();
+    ctx.state.finalize();
     state.squeeze(mu);
 
     // Compute rhoprime = CRH(key, rnd, mu)
@@ -103,7 +103,7 @@ pub fn crypto_sign_signature_internal(
     state.absorb(key);
     state.absorb(rnd);
     state.absorb(mu);
-    state.finalize();
+    ctx.state.state.finalize();
     state.squeeze(rhoprime);
 
     // Expand matrix and transform vectors
@@ -133,7 +133,7 @@ pub fn crypto_sign_signature_internal(
         state = ctx.state.st;
         state.absorb(mu);
         state.absorb(sig[0 .. params.K * params.POLYW1_PACKEDBYTES]);
-        state.finalize();
+        ctx.state.finalize();
         state.squeeze(sig[0..params.CTILDEBYTES]);
 
         poly.poly_challenge(&cp, sig);
@@ -242,7 +242,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
     state.absorb(mu[0..params.TRBYTES]);
     state.absorb(pre);
     state.absorb(m);
-    state.finalize();
+    ctx.state.finalize();
     state.squeeze(mu);
     poly.poly_challenge(&cp, &c);
     polyvec.polyvec_matrix_expand(&mat, &rho);
@@ -262,7 +262,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
     state = ctx.state.st;
     state.absorb(mu);
     state.absorb(buf);
-    state.finalize();
+    ctx.state.finalize();
     state.squeeze(&c2);
     i = 0;
     while (i < params.CTILDEBYTES) : (i += 1) {
