@@ -103,7 +103,7 @@ pub fn crypto_sign_signature_internal(
     state.absorb(key);
     state.absorb(rnd);
     state.absorb(mu);
-    ctx.state.state.final();
+    ctx.final();
     state.squeeze(rhoprime);
 
     // Expand matrix and transform vectors
