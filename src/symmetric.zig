@@ -14,6 +14,20 @@ pub const Shake256_state = struct {
     s: [25]u64,
 };
 
+pub fn init128() Shake128_state {
+    var state: Shake128_state = undefined;
+    state.state = Shake128.init(.{});
+    state.s = [_]u64{0} ** 25;
+    return state;
+}
+
+pub fn init256() Shake256_state {
+    var state: Shake256_state = undefined;
+    state.s = [_]u64{0} ** 25;
+    state.state = Shake256.init(.{});
+    return state;
+}
+
 pub fn dilithium_shake128_stream_init(state: *Shake128_state, seed: [params.SEEDBYTES]u8, nonce: u16) void {
     var t: [2]u8 = undefined;
     t[0] = @truncate(nonce);

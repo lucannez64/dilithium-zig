@@ -133,7 +133,7 @@ const STREAM128_BLOCKBYTES = 168;
 
 pub fn poly_uniform(a: *poly, seed: [params.SEEDBYTES]u8, nonce: u16) void {
     var i = 0;
-    var state = symmetric.Shake128_State.init(.{});
+    var state = symmetric.init128();
     state.state.update(seed);
 
     var nonce_bytes: [2]u8 = undefined;
@@ -207,7 +207,7 @@ const POLY_UNIFORM_ETA_NBLOCKS = if (params.ETA == 4) POLY_UNIFORM_ETA_NBLOCKS_4
 
 pub fn poly_uniform_eta(a: *poly, seed: [params.CRHBYTES]u8, nonce: u16) void {
     // Initialize SHAKE256 sponge (equivalent to stream256)
-    var state = symmetric.Shake256_State.init(.{});
+    var state = symmetric.init256();
     state.state.update(seed);
 
     // Process nonce into the state
@@ -242,7 +242,7 @@ pub fn poly_uniform_eta(a: *poly, seed: [params.CRHBYTES]u8, nonce: u16) void {
 const POLY_UNIFORM_GAMMA1_NBLOCKS = ((params.POLYZ_PACKEDBYTES + STREAM256_BLOCKBYTES - 1) / STREAM256_BLOCKBYTES);
 
 pub fn poly_uniform_gamma1(a: *poly, seed: [params.CRHBYTES]u8, nonce: u16) void {
-    var state = symmetric.Shake256_State.init(.{});
+    var state = symmetric.init256();
     var ctx = &state.state;
     ctx.update(seed);
 
@@ -257,7 +257,7 @@ pub fn poly_uniform_gamma1(a: *poly, seed: [params.CRHBYTES]u8, nonce: u16) void
 }
 
 pub fn poly_challenge(c: *poly, seed: [params.CTILDEBYTES]u8) void {
-    var ctx = symmetric.Shake256_State.init(.{});
+    var ctx = symmetric.init256();
 
     var state = &ctx.state;
     state.update(seed);

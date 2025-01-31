@@ -77,7 +77,7 @@ pub fn crypto_sign_signature_internal(
     var w0: polyvec.polyveck = undefined;
     var h: polyvec.polyveck = undefined;
     var cp: poly.poly = undefined;
-    var ctx = symmetric.Shake256_State.init(.{});
+    var ctx = symmetric.init256();
     var state = ctx.state;
 
     rho = seedbuf[0..params.SEEDBYTES];
@@ -96,7 +96,7 @@ pub fn crypto_sign_signature_internal(
     state.squeeze(mu);
 
     // Compute rhoprime = CRH(key, rnd, mu)
-    ctx = symmetric.Shake256_State.init(.{});
+    ctx = symmetric.init256();
     state = ctx.state;
     state.absorb(key);
     state.absorb(rnd);
@@ -127,7 +127,7 @@ pub fn crypto_sign_signature_internal(
         polyvec.polyveck_decompose(&w1, &w0, &w1);
         polyvec.polyveck_pack_w1(sig, &w1);
 
-        ctx = symmetric.Shake256_State.init(.{});
+        ctx = symmetric.init256();
         state = ctx.state;
         state.absorb(mu);
         state.absorb(sig[0 .. params.K * params.POLYW1_PACKEDBYTES]);
@@ -220,7 +220,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
     var t1: polyvec.polyveck = undefined;
     var w1: polyvec.polyveck = undefined;
     var h: polyvec.polyveck = undefined;
-    var ctx: symmetric.Shake256_state = symmetric.Shake256_State.init(.{});
+    var ctx: symmetric.Shake256_state = symmetric.init256();
     var state: std.crypto.hash.sha3.Shake256 = ctx.state;
 
     if (sig.len != params.CRYPTO_BYTES) {
@@ -235,7 +235,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
         return false;
     }
     state.hash(pk, mu[0..params.TRBYTES], .{});
-    ctx = symmetric.Shake256_State.init(.{});
+    ctx = symmetric.init256();
     state = ctx.state;
     state.absorb(mu[0..params.TRBYTES]);
     state.absorb(pre);
@@ -256,7 +256,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
     polyvec.polyveck_caddq(&w1);
     polyvec.polyveck_use_hint(&w1, &w1, &h);
     polyvec.polyveck_pack_w1(&buf, &w1);
-    ctx = symmetric.Shake256_State.init(.{});
+    ctx = symmetric.init256();
     state = ctx.state;
     state.absorb(mu);
     state.absorb(buf);
