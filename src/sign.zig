@@ -180,7 +180,7 @@ pub const SignatureError = error{
     BadSignature,
 };
 
-pub fn crypto_sign_signature(sig: *[]u8, m: []u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
+pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
     var i = 0;
     var pre: [256]u8 = undefined;
     var rnd: [params.RNDBYTES]u8 = undefined;
