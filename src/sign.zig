@@ -1,10 +1,13 @@
 const params = @import("params.zig");
-const randombytes = @import("std").crypto.random.bytes;
 const std = @import("std");
 const poly = @import("poly.zig");
 const polyvec = @import("polyvec.zig");
 const packing = @import("packing.zig");
 const symmetric = @import("symmetric.zig");
+
+fn randombytes(r: std.crypto.Random, buf: []u8) void {
+    std.crypto.random.bytes(r, buf);
+}
 
 pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
     var seedbuf: [2 * params.SEEDBYTES + params.CRHBYTES]u8 = undefined;
