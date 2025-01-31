@@ -50,9 +50,9 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
 
     polyvec.polyveck_caddq(&t1);
     polyvec.polyveck_power2round(&t1, &t0, &t1);
-    packing.pack_pk(pk, @as([params.SEEDBYTES]u8, rho), &t1);
+    packing.pack_pk(pk[0..params.CRYPTO_PUBLICKEYBYTES].*, rho[0..params.SEEDBYTES].*, &t1, &t1);
     std.crypto.hash.sha3.Shake256.hash(pk, &tr, .{});
-    packing.pack_sk(sk, rho[0..params.SEEDBYTES].*, tr[0..params.TRBYTES].*, key[0..params.SEEDBYTES].*, &t0, &s1, &s2);
+    packing.pack_sk(sk[0..params.CRYPTO_SECRETKEYBYTES].*, rho[0..params.SEEDBYTES].*, tr[0..params.TRBYTES].*, key[0..params.SEEDBYTES].*, &t0, &s1, &s2);
 }
 
 pub fn crypto_sign_signature_internal(
@@ -88,7 +88,7 @@ pub fn crypto_sign_signature_internal(
     mu = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES];
     rhoprime = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES + params.CRHBYTES].*;
 
-    packing.unpack_sk(rho[0..params.SEEDBYTES].*, tr[0..params.TRBYTES].*, key[0..params.SEEDBYTES].*, &t0, &s1, &s2, sk);
+    packing.unpack_sk(rho[0..params.SEEDBYTES].*, tr[0..params.TRBYTES].*, key[0..params.SEEDBYTES].*, &t0, &s1, &s2, sk[0..params.CRYPTO_SECRETKEYBYTES].*);
 
     // Compute mu = CRH(tr, pre, msg)
     state.absorb(tr);
