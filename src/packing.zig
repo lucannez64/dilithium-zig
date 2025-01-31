@@ -70,34 +70,34 @@ pub fn unpack_sk(rho: *[params.SEEDBYTES]u8, tr: *[params.TRBYTES]u8, key: *[par
     while (i < params.SEEDBYTES) : (i += 1) {
         rho[i] = sk[i];
     }
-    sk = &sk[params.SEEDBYTES..];
+    sk = @constCast(sk[params.SEEDBYTES..]);
 
     i = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
         key[i] = sk[i];
     }
-    sk = &sk[params.SEEDBYTES..];
+    sk = @constCast(sk[params.SEEDBYTES..]);
 
     i = 0;
     while (i < params.TRBYTES) : (i += 1) {
         tr[i] = sk[i];
     }
 
-    sk = &sk[params.TRBYTES..];
+    sk = @constCast(sk[params.TRBYTES..]);
 
     i = 0;
     while (i < params.L) : (i += 1) {
         poly.polyeta_unpack(&s1.vec[i], sk[i * params.POLYT0_PACKEDBYTES ..].*);
     }
 
-    sk = &sk[params.L * params.POLYETA_PACKEDBYTES ..];
+    sk = @constCast(sk[params.L * params.POLYETA_PACKEDBYTES ..]);
 
     i = 0;
     while (i < params.K) : (i += 1) {
         polyvec.unpack(&s2.vec[i], sk[i * params.POLYT0_PACKEDBYTES ..].*);
     }
 
-    sk = &sk[params.K * params.POLYT0_PACKEDBYTES ..];
+    sk = @constCast(sk[params.K * params.POLYT0_PACKEDBYTES ..]);
 
     i = 0;
     while (i < params.K) : (i += 1) {
