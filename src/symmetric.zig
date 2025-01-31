@@ -27,6 +27,9 @@ pub const Shake256_state = struct {
     pub fn squeeze(self: *Shake256_state, data: []u8) void {
         self.state.st.squeeze(data);
     }
+    pub fn final(self: *Shake256_state) void {
+        self.state.final(self.s);
+    }
 };
 
 pub fn init128() Shake128_state {
