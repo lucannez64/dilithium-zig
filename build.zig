@@ -14,7 +14,11 @@ pub fn build(b: *std.Build) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall. Here we do not
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
-
+    _ = b.addModule("dilithium", .{
+        .optimize = optimize,
+        .target = target,
+        .root_source_file = b.path("src/root.zig"),
+    });
     const lib = b.addStaticLibrary(.{
         .name = "dilithium",
         // In this case the main source file is merely a path, however, in more
@@ -22,12 +26,6 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
-    });
-
-    b.addModule("dilithium", .{
-        .optimize = optimize,
-        .target = target,
-        .root_source_file = b.path("src/root.zig"),
     });
 
     // This declares intent for the library to be installed into the standard
