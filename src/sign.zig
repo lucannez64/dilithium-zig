@@ -82,7 +82,7 @@ pub fn crypto_sign_signature_internal(
     var cp: poly.poly = undefined;
     var ctx = symmetric.init256();
     var state = ctx.state.st;
-    rho = buffer[0..params.SEEDBYTES];
+    rho = buffer[0..params.SEEDBYTES].*;
     tr = buffer[params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES];
     key = buffer[params.SEEDBYTES + params.TRBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES];
     mu = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES];
@@ -107,7 +107,7 @@ pub fn crypto_sign_signature_internal(
     state.squeeze(&rhoprime);
 
     // Expand matrix and transform vectors
-    polyvec.polyvec_matrix_expand(mat, &rho);
+    polyvec.polyvec_matrix_expand(mat, @as([]u8, rho));
     polyvec.polyvecl_ntt(&s1);
     polyvec.polyveck_ntt(&s2);
     polyvec.polyveck_ntt(&t0);
