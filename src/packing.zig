@@ -65,38 +65,36 @@ pub fn unpack_sk(rho: *[params.SEEDBYTES]u8, tr: *[params.TRBYTES]u8, key: *[par
     while (i < params.SEEDBYTES) : (i += 1) {
         rho[i] = sk[i];
     }
-    sk = @constCast(sk[params.SEEDBYTES..]);
 
+    var j = i;
     i = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
-        key[i] = sk[i];
+        key[i] = sk[j];
+        j += 1;
     }
-    sk = @constCast(sk[params.SEEDBYTES..]);
 
     i = 0;
     while (i < params.TRBYTES) : (i += 1) {
-        tr[i] = sk[i];
+        tr[i] = sk[j];
+        j += 1;
     }
-
-    sk = @constCast(sk[params.TRBYTES..]);
 
     i = 0;
     while (i < params.L) : (i += 1) {
-        poly.polyeta_unpack(&s1.vec[i], sk[i * params.POLYT0_PACKEDBYTES ..].*);
+        poly.polyeta_unpack(&s1.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..].*);
+        j += 1;
     }
-
-    sk = @constCast(sk[params.L * params.POLYETA_PACKEDBYTES ..]);
 
     i = 0;
     while (i < params.K) : (i += 1) {
-        polyvec.unpack(&s2.vec[i], sk[i * params.POLYT0_PACKEDBYTES ..].*);
+        polyvec.unpack(&s2.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..].*);
+        j += 1;
     }
-
-    sk = @constCast(sk[params.K * params.POLYT0_PACKEDBYTES ..]);
 
     i = 0;
     while (i < params.K) : (i += 1) {
-        polyvec.unpack(&t0.vec[i], sk[i * params.POLYT0_PACKEDBYTES ..].*);
+        polyvec.unpack(&t0.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..].*);
+        j += 1;
     }
 }
 
