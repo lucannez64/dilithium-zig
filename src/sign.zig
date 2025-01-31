@@ -188,7 +188,7 @@ pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []c
         return SignatureError.ContextTooLong;
     }
     pre[0] = 0;
-    pre[1] = ctx.len;
+    pre[1] = @as(u8, ctx.len);
     while (i < ctx.len) : (i += 1) {
         pre[i + 2] = ctx[i];
     }
@@ -277,7 +277,7 @@ pub fn crypto_sign_verify(sig: []const u8, m: []const u8, ctx: []const u8, pk: [
         return SignatureError.ContextTooLong;
     }
     pre[0] = 0;
-    pre[1] = ctx.len;
+    pre[1] = @as(u8, ctx.len);
     while (i < ctx.len) : (i += 1) {
         pre[i + 2] = ctx[i];
     }
