@@ -57,7 +57,7 @@ pub fn crypto_sign_signature_internal(
     sig: *[]u8,
     siglen: *usize,
     m: []const u8,
-    pre: []const u8,
+    pre: []u8,
     rnd: []const u8,
     sk: []const u8,
 ) isize {
@@ -209,7 +209,7 @@ pub fn crypto_sign(sm: []u8, m: []u8, ctx: []const u8, sk: []const u8) Signature
     return ret;
 }
 
-pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []const u8, pk: []const u8) bool {
+pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk: []const u8) bool {
     var i: usize = 0;
     var buf: [params.K * params.POLYW1_PACKEDBYTES]u8 = undefined;
     var rho: [params.SEEDBYTES]u8 = undefined;
@@ -284,7 +284,7 @@ pub fn crypto_sign_verify(sig: []const u8, m: []const u8, ctx: []const u8, pk: [
     while (i < ctx.len) : (i += 1) {
         pre[i + 2] = ctx[i];
     }
-    return crypto_sign_verify_internal(sig, m, pre[0 .. ctx.len + 2], pk);
+    return crypto_sign_verify_internal(sig, m, &pre[0 .. ctx.len + 2], pk);
 }
 
 pub fn crypto_sign_open(m: []u8, sm: []const u8, ctx: []const u8, pk: []const u8) SignatureError!void {
