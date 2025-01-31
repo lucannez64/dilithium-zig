@@ -8,7 +8,7 @@ pub const polyveck = struct {
     vec: [params.K]poly.poly,
 };
 
-pub fn polyvec_matrix_expand(mat: [params.K]polyvecl, rho: [params.SEEDBYTES]u8) void {
+pub fn polyvec_matrix_expand(mat: *[params.K]polyvecl, rho: [params.SEEDBYTES]u8) void {
     var i: usize = 0;
     while (i < params.K) : (i += 1) {
         var j: usize = 0;

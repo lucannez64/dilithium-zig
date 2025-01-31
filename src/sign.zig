@@ -107,7 +107,7 @@ pub fn crypto_sign_signature_internal(
     state.squeeze(&rhoprime);
 
     // Expand matrix and transform vectors
-    polyvec.polyvec_matrix_expand(mat, @as([*]u8, @ptrCast(&rho))[0..params.SEEDBYTES].*);
+    polyvec.polyvec_matrix_expand(&mat, @as([*]u8, @ptrCast(&rho))[0..params.SEEDBYTES].*);
     polyvec.polyvecl_ntt(&s1);
     polyvec.polyveck_ntt(&s2);
     polyvec.polyveck_ntt(&t0);
@@ -120,7 +120,7 @@ pub fn crypto_sign_signature_internal(
         // Matrix-vector multiplication
         z = y;
         polyvec.polyvecl_ntt(&z);
-        polyvec.polyvec_matrix_pointwise_montgomery(&w1, &mat, &z);
+        polyvec.polyvec_matrix_pointwise_montgomery(&w1, mat, &z);
         polyvec.polyveck_reduce(&w1);
         polyvec.polyveck_invntt_tomont(&w1);
 
