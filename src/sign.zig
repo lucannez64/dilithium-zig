@@ -5,8 +5,8 @@ const polyvec = @import("polyvec.zig");
 const packing = @import("packing.zig");
 const symmetric = @import("symmetric.zig");
 
-fn randombytes(r: anytype, buf: []u8) void {
-    std.crypto.random.bytes(r, buf);
+fn randombytes(buf: []u8) void {
+    std.crypto.random.bytes(buf);
 }
 
 pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
@@ -22,8 +22,7 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
     var t1: polyvec.polyveck = undefined;
     var t0: polyvec.polyveck = undefined;
 
-    const rand = std.crypto.random;
-    randombytes(rand, &seedbuf);
+    randombytes(&seedbuf);
     seedbuf[params.SEEDBYTES] = params.K;
     seedbuf[params.SEEDBYTES + 1] = params.L;
     const seed = seedbuf[0 .. params.SEEDBYTES + 2];
@@ -195,9 +194,8 @@ pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []c
     while (i < ctx.len) : (i += 1) {
         pre[i + 2] = ctx[i];
     }
-    const r = std.crypto.random;
-    randombytes(r, &rnd);
-    crypto_sign_signature_internal(sig, &sig.len, m, &pre[0 .. 2 + ctx.len], &rnd, sk);
+    randombytes(&rnd);
+    crypto_sign_signature_internal(sig, &sig.len, m, pre[0 .. 2 + ctx.len], &rnd, sk);
 }
 
 pub fn crypto_sign(sm: []u8, m: []u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
@@ -284,7 +282,7 @@ pub fn crypto_sign_verify(sig: []const u8, m: []const u8, ctx: []const u8, pk: [
     while (i < ctx.len) : (i += 1) {
         pre[i + 2] = ctx[i];
     }
-    return crypto_sign_verify_internal(sig, m, &pre[0 .. ctx.len + 2], pk);
+    return crypto_sign_verify_internal(sig, m, pre[0 .. ctx.len + 2], pk);
 }
 
 pub fn crypto_sign_open(m: []u8, sm: []const u8, ctx: []const u8, pk: []const u8) SignatureError!void {
