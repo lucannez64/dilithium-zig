@@ -4,13 +4,16 @@ const poly = @import("poly.zig");
 const polyvec = @import("polyvec.zig");
 const packing = @import("packing.zig");
 const symmetric = @import("symmetric.zig");
-
+const SEEDBYTES = params.SEEDBYTES;
+const TRBYTES = params.TRBYTES;
+const CRHBYTES = params.CRHBYTES;
 fn randombytes(buf: []u8) void {
     std.crypto.random.bytes(buf);
 }
 
 pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
-    var seedbuf: [2 * params.SEEDBYTES + params.CRHBYTES]u8 = undefined;
+    var buffer: [SEEDBYTES + TRBYTES + SEEDBYTES + CRHBYTES]u8 = undefined;
+    var seedbuf: [2 * params.SEEDBYTES + params.CRHBYTES]u8 = buffer[0 .. 2 * params.SEEDBYTES + params.CRHBYTES];
     var tr: [params.TRBYTES]u8 = undefined;
     var rho: []u8 = undefined;
     var rhoprime: []u8 = undefined;
@@ -27,9 +30,9 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
     seedbuf[params.SEEDBYTES + 1] = params.L;
     const seed = seedbuf[0 .. params.SEEDBYTES + 2];
     std.crypto.hash.sha3.Shake256.hash(seed, &seedbuf, .{});
-    rho.ptr = &seedbuf;
-    rhoprime.ptr = &rho + params.SEEDBYTES;
-    key.ptr = &rhoprime + params.CRHBYTES;
+    rho = buffer[0..params.SEEDBYTES];
+    rhoprime = buffer[params.SEEDBYTES .. params.SEEDBYTES + params.CRHBYTES];
+    key = buffer[params.SEEDBYTES + params.CRHBYTES .. params.SEEDBYTES + params.CRHBYTES + params.SEEDBYTES];
     polyvec.polyvec_matrix_expand(&mat, &rho);
     polyvec.polyvecl_uniform_eta(&s1, rhoprime, 0);
     polyvec.polyveck_uniform_eta(&s2, rhoprime, params.L);
@@ -60,12 +63,12 @@ pub fn crypto_sign_signature_internal(
     rnd: []const u8,
     sk: []const u8,
 ) isize {
-    var seedbuf: [2 * params.SEEDBYTES + params.TRBYTES + 2 * params.CRHBYTES]u8 = undefined;
+    var buffer: [SEEDBYTES + TRBYTES + SEEDBYTES + CRHBYTES + CRHBYTES]u8 = undefined;
     var rho: []u8 = undefined;
     var tr: []u8 = undefined;
     var key: []u8 = undefined;
     var mu: []u8 = undefined;
-    var rhoprime: []u8 = undefined;
+    var rhoprime: [params.CRHBYTES]u8 = undefined;
     var nonce: u16 = 0;
     var mat: [params.K]polyvec.polyvecl = undefined;
     var s1: polyvec.polyvecl = undefined;
@@ -79,12 +82,11 @@ pub fn crypto_sign_signature_internal(
     var cp: poly.poly = undefined;
     var ctx = symmetric.init256();
     var state = ctx.state;
-
-    rho.ptr = &seedbuf;
-    tr.ptr = &seedbuf + params.SEEDBYTES;
-    key.ptr = &seedbuf + params.SEEDBYTES + params.TRBYTES;
-    mu.ptr = &seedbuf + params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES;
-    rhoprime.ptr = &seedbuf + params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES;
+    rho = buffer[0..params.SEEDBYTES];
+    tr = buffer[params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES];
+    key = buffer[params.SEEDBYTES + params.TRBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES];
+    mu = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES];
+    rhoprime = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES + params.CRHBYTES];
 
     packing.unpack_sk(@as([params.SEEDBYTES]u8, rho), @as([params.TRBYTES]u8, tr), @as([params.SEEDBYTES]u8, key), &t0, &s1, &s2, sk);
 
