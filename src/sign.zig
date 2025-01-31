@@ -195,7 +195,7 @@ pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []c
         pre[i + 2] = ctx[i];
     }
     randombytes(&rnd);
-    crypto_sign_signature_internal(sig, &sig.len, m, pre[0 .. 2 + ctx.len], &rnd, sk);
+    return crypto_sign_signature_internal(sig, &sig.len, m, pre[0 .. 2 + ctx.len], &rnd, sk);
 }
 
 pub fn crypto_sign(sm: []u8, m: []u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
