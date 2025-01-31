@@ -107,7 +107,7 @@ pub fn crypto_sign_signature_internal(
     state.squeeze(&rhoprime);
 
     // Expand matrix and transform vectors
-    polyvec.polyvec_matrix_expand(mat, rho);
+    polyvec.polyvec_matrix_expand(mat, &rho);
     polyvec.polyvecl_ntt(&s1);
     polyvec.polyveck_ntt(&s2);
     polyvec.polyveck_ntt(&t0);
