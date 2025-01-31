@@ -134,7 +134,7 @@ pub fn crypto_sign_signature_internal(
         state.absorb(mu);
         state.absorb(sig.*[0 .. params.K * params.POLYW1_PACKEDBYTES]);
         ctx.final();
-        state.squeeze(&sig[0..params.CTILDEBYTES]);
+        state.squeeze(sig.*[0..params.CTILDEBYTES]);
 
         poly.poly_challenge(&cp, sig);
         poly.poly_ntt(&cp);
