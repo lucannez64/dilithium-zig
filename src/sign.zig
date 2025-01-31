@@ -127,12 +127,12 @@ pub fn crypto_sign_signature_internal(
         // Decompose w and call the random oracle
         polyvec.polyveck_caddq(&w1);
         polyvec.polyveck_decompose(&w1, &w0, &w1);
-        polyvec.polyveck_pack_w1(sig[0 .. params.K * params.POLYW1_PACKEDBYTES].*, &w1);
+        polyvec.polyveck_pack_w1(sig.*[0 .. params.K * params.POLYW1_PACKEDBYTES], &w1);
 
         ctx = symmetric.init256();
         state = ctx.state.st;
         state.absorb(mu);
-        state.absorb(sig[0 .. params.K * params.POLYW1_PACKEDBYTES]);
+        state.absorb(sig.*[0 .. params.K * params.POLYW1_PACKEDBYTES]);
         ctx.final();
         state.squeeze(&sig[0..params.CTILDEBYTES]);
 
