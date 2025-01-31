@@ -47,3 +47,11 @@ pub fn dilithium_shake256_stream_init(state: *Shake256_state, seed: [params.CRHB
     Shake128.update(state.state, &t);
     Shake128.final(state.state, state.s);
 }
+
+pub fn absorb(state: *Shake256_state, data: []const u8) void {
+    state.state.st.absorb(data);
+}
+
+pub fn squeeze(state: *Shake256_state, data: []u8) void {
+    state.state.st.squeeze(data);
+}

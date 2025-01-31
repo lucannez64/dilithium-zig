@@ -3,7 +3,7 @@ const poly = @import("poly.zig");
 const params = @import("params.zig");
 
 pub fn pack_pk(pk: [params.CRYPTO_PUBLICKEYBYTES]u8, rho: [params.SEEDBYTES]u8, t1: *const polyvec.polyveck) void {
-    var i = 0;
+    var i: usize = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
         pk[i] = rho[i];
     }
@@ -16,7 +16,7 @@ pub fn pack_pk(pk: [params.CRYPTO_PUBLICKEYBYTES]u8, rho: [params.SEEDBYTES]u8, 
 }
 
 pub fn unpack_pk(rho: [params.SEEDBYTES]u8, t1: *polyvec.polyveck, pk: [params.CRYPTO_PUBLICKEYBYTES]u8) void {
-    var i = 0;
+    var i: usize = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
         rho[i] = pk[i];
     }
@@ -29,7 +29,7 @@ pub fn unpack_pk(rho: [params.SEEDBYTES]u8, t1: *polyvec.polyveck, pk: [params.C
 }
 
 pub fn pack_sk(sk: [params.CRYPTO_SECRETKEYBYTES]u8, rho: [params.SEEDBYTES]u8, tr: [params.TRBYTES]u8, key: [params.SEEDBYTES]u8, t0: *const polyvec.polyveck, s1: *const polyvec.polyvecl, s2: *const polyvec.polyveck) void {
-    var i = 0;
+    var i: usize = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
         sk[i] = rho[i];
     }
@@ -66,7 +66,7 @@ pub fn pack_sk(sk: [params.CRYPTO_SECRETKEYBYTES]u8, rho: [params.SEEDBYTES]u8, 
 }
 
 pub fn unpack_sk(rho: [params.SEEDBYTES]u8, tr: [params.TRBYTES]u8, key: [params.SEEDBYTES]u8, t0: *polyvec.polyveck, s1: *polyvec.polyvecl, s2: *polyvec.polyveck, sk: [params.CRYPTO_SECRETKEYBYTES]u8) void {
-    var i = 0;
+    var i: usize = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
         rho[i] = sk[i];
     }
@@ -103,7 +103,7 @@ pub fn unpack_sk(rho: [params.SEEDBYTES]u8, tr: [params.TRBYTES]u8, key: [params
 }
 
 pub fn pack_sig(sig: [params.CRYPTO_BYTES]u8, c: [params.CTILDEBYTES]u8, z: *const polyvec.polyvecl, h: *const polyvec.polyveck) void {
-    var i = 0;
+    var i: usize = 0;
     while (i < params.CTILDEBYTES) : (i += 1) {
         sig[i] = c[i];
     }
@@ -119,7 +119,7 @@ pub fn pack_sig(sig: [params.CRYPTO_BYTES]u8, c: [params.CTILDEBYTES]u8, z: *con
     while (i < params.OMEGA + params.K) : (i += 1) {
         sig[i] = 0;
     }
-    var k = 0;
+    var k: usize = 0;
     i = 0;
     while (i < params.K) : (i += 1) {
         var j = 0;
@@ -134,7 +134,7 @@ pub fn pack_sig(sig: [params.CRYPTO_BYTES]u8, c: [params.CTILDEBYTES]u8, z: *con
 }
 
 pub fn unpack_sig(c: [params.CTILDEBYTES]u8, z: *polyvec.polyvecl, h: *polyvec.polyveck, sig: [params.CRYPTO_BYTES]u8) bool {
-    var i = 0;
+    var i: usize = 0;
     while (i < params.CTILDEBYTES) : (i += 1) {
         c[i] = sig[i];
     }
@@ -146,10 +146,10 @@ pub fn unpack_sig(c: [params.CTILDEBYTES]u8, z: *polyvec.polyvecl, h: *polyvec.p
     }
     sig += params.L * params.POLYETA_PACKEDBYTES;
 
-    var k = 0;
+    var k: usize = 0;
     i = 0;
 
-    var j = 0;
+    var j: usize = 0;
     while (i < params.K) : (i += 1) {
         j = 0;
         while (j < params.N) : (j += 1) {
