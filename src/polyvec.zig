@@ -18,7 +18,7 @@ pub fn polyvec_matrix_expand(mat: [params.K]polyvecl, rho: [params.SEEDBYTES]u8)
     }
 }
 
-pub fn polyvec_matrix_pointwise_montgomery(t: *polyvecl, mat: [params.K]polyvecl, v: *polyvecl) void {
+pub fn polyvec_matrix_pointwise_montgomery(t: *polyveck, mat: [params.K]polyvecl, v: *polyvecl) void {
     var i: usize = 0;
     while (i < params.L) : (i += 1) {
         polyvecl_pointwise_acc_montgomery(&t.vec[i], &mat[i].vec, v);
