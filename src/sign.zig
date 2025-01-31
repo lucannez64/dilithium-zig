@@ -181,7 +181,7 @@ pub const SignatureError = error{
 };
 
 pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
-    var i = 0;
+    var i: usize = 0;
     var pre: [256]u8 = undefined;
     var rnd: [params.RNDBYTES]u8 = undefined;
     if (ctx.len > 256) {
@@ -198,7 +198,7 @@ pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []c
 }
 
 pub fn crypto_sign(sm: []u8, m: []u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
-    var i = 0;
+    var i: usize = 0;
     while (i < m.len) : (i += 1) {
         sm[params.CRYPTO_BYTES + m.len - 1 - i] = m[m.len - 1 - i];
     }
@@ -207,7 +207,7 @@ pub fn crypto_sign(sm: []u8, m: []u8, ctx: []const u8, sk: []const u8) Signature
 }
 
 pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []const u8, pk: []const u8) bool {
-    var i = 0;
+    var i: usize = 0;
     var buf: [params.K * params.POLYW1_PACKEDBYTES]u8 = undefined;
     var rho: [params.SEEDBYTES]u8 = undefined;
     var mu: [params.CRHBYTES]u8 = undefined;
@@ -271,7 +271,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []const 
 }
 
 pub fn crypto_sign_verify(sig: []const u8, m: []const u8, ctx: []const u8, pk: []const u8) SignatureError!bool {
-    var i = 0;
+    var i: usize = 0;
     var pre: [257]u8 = undefined;
     if (ctx.len > 255) {
         return SignatureError.ContextTooLong;
@@ -285,7 +285,7 @@ pub fn crypto_sign_verify(sig: []const u8, m: []const u8, ctx: []const u8, pk: [
 }
 
 pub fn crypto_sign_open(m: []u8, sm: []const u8, ctx: []const u8, pk: []const u8) SignatureError!void {
-    var i = 0;
+    var i: usize = 0;
     if (sm.len < params.CRYPTO_BYTES) {
         badsig(&m, sm.len);
         return SignatureError.BadSignature;
@@ -304,7 +304,7 @@ pub fn crypto_sign_open(m: []u8, sm: []const u8, ctx: []const u8, pk: []const u8
 }
 
 fn badsig(m: []u8, smlen: usize) void {
-    var i = 0;
+    var i: usize = 0;
     while (i < smlen) : (i += 1) {
         m[i] = 0;
         m.len = 0;
