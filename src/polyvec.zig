@@ -69,7 +69,7 @@ pub fn polyvecl_invntt_tomont(v: *polyvecl) void {
     }
 }
 
-pub fn polyvecl_pointwise_poly_montgomery(r: *polyvecl, a: *const poly, v: *const polyvecl) void {
+pub fn polyvecl_pointwise_poly_montgomery(r: *polyvecl, a: *const poly.poly, v: *const polyvecl) void {
     var i: usize = 0;
     while (i < params.L) : (i += 1) {
         poly.poly_pointwise_montgomery(&r.vec[i], a, &v.vec[i]);
