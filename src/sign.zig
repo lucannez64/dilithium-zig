@@ -140,7 +140,8 @@ pub fn crypto_sign_signature_internal(
         poly.poly_ntt(&cp);
 
         // Compute z, reject if it reveals secret
-        polyvec.polyvecl_pointwise_poly_montgomery(&z, &cp, &s1);
+        const cocp = cp;
+        polyvec.polyvecl_pointwise_poly_montgomery(&z, &cocp, &s1);
         polyvec.polyvecl_invntt_tomont(&z);
         polyvec.polyvecl_add(&z, &z, &y);
         polyvec.polyvecl_reduce(&z);
