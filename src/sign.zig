@@ -86,7 +86,7 @@ pub fn crypto_sign_signature_internal(
     tr = buffer[params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES];
     key = buffer[params.SEEDBYTES + params.TRBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES];
     mu = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES];
-    rhoprime = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES + params.CRHBYTES];
+    rhoprime = buffer[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES + params.CRHBYTES].*;
 
     packing.unpack_sk(@as([params.SEEDBYTES]u8, rho), @as([params.TRBYTES]u8, tr), @as([params.SEEDBYTES]u8, key), &t0, &s1, &s2, sk);
 
