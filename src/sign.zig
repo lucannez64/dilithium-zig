@@ -5,7 +5,7 @@ const polyvec = @import("polyvec.zig");
 const packing = @import("packing.zig");
 const symmetric = @import("symmetric.zig");
 
-fn randombytes(r: std.crypto.random, buf: []u8) void {
+fn randombytes(r: anytype, buf: []u8) void {
     std.crypto.random.bytes(r, buf);
 }
 
