@@ -51,7 +51,7 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
 }
 
 pub fn crypto_sign_signature_internal(
-    sig: []u8,
+    sig: *[]u8,
     siglen: *usize,
     m: []const u8,
     pre: []const u8,
@@ -180,7 +180,7 @@ pub const SignatureError = error{
     BadSignature,
 };
 
-pub fn crypto_sign_signature(sig: []u8, m: []u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
+pub fn crypto_sign_signature(sig: *[]u8, m: []u8, ctx: []const u8, sk: []const u8) SignatureError!isize {
     var i = 0;
     var pre: [256]u8 = undefined;
     var rnd: [params.RNDBYTES]u8 = undefined;
