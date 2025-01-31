@@ -174,7 +174,7 @@ pub fn crypto_sign_signature_internal(
         }
 
         // Write signature
-        packing.pack_sig(sig, sig, &z, &h);
+        packing.pack_sig(sig.*[0..params.CRYPTO_BYTES].*, sig.*[0..params.CTILDEBYTES].*, &z, &h);
         siglen.* = params.CRYPTO_BYTES;
         return 0;
     }
