@@ -27,9 +27,9 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
     seedbuf[params.SEEDBYTES + 1] = params.L;
     const seed = seedbuf[0 .. params.SEEDBYTES + 2];
     std.crypto.hash.sha3.Shake256.hash(seed, &seedbuf, .{});
-    rho = seedbuf;
-    rhoprime = rho + params.SEEDBYTES;
-    key = rhoprime + params.CRHBYTES;
+    rho.ptr = &seedbuf;
+    rhoprime.ptr = &rho + params.SEEDBYTES;
+    key.ptr = &rhoprime + params.CRHBYTES;
     polyvec.polyvec_matrix_expand(&mat, &rho);
     polyvec.polyvecl_uniform_eta(&s1, rhoprime, 0);
     polyvec.polyveck_uniform_eta(&s2, rhoprime, params.L);
@@ -47,9 +47,9 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
 
     polyvec.polyveck_caddq(&t1);
     polyvec.polyveck_power2round(&t1, &t0, &t1);
-    packing.pack_pk(pk, rho, &t1);
+    packing.pack_pk(pk, @as([params.SEEDBYTES]u8, rho), &t1);
     std.crypto.hash.sha3.Shake256.hash(pk, &tr, .{});
-    packing.pack_sk(sk, rho, tr, key, &t0, &s1, &s2);
+    packing.pack_sk(sk, @as([params.SEEDBYTES]u8, rho), @as([params.SEEDBYTES]u8, tr), @as([params.SEEDBYTES]u8, key), &t0, &s1, &s2);
 }
 
 pub fn crypto_sign_signature_internal(
@@ -80,13 +80,13 @@ pub fn crypto_sign_signature_internal(
     var ctx = symmetric.init256();
     var state = ctx.state;
 
-    rho = seedbuf[0..params.SEEDBYTES];
-    tr = seedbuf[params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES];
-    key = seedbuf[params.SEEDBYTES + params.TRBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES];
-    mu = seedbuf[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES];
-    rhoprime = seedbuf[params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES ..];
+    rho.ptr = &seedbuf;
+    tr.ptr = &seedbuf + params.SEEDBYTES;
+    key.ptr = &seedbuf + params.SEEDBYTES + params.TRBYTES;
+    mu.ptr = &seedbuf + params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES;
+    rhoprime.ptr = &seedbuf + params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES + params.CRHBYTES;
 
-    packing.unpack_sk(rho, tr, key, &t0, &s1, &s2, sk);
+    packing.unpack_sk(@as([params.SEEDBYTES]u8, rho), @as([params.TRBYTES]u8, tr), @as([params.SEEDBYTES]u8, key), &t0, &s1, &s2, sk);
 
     // Compute mu = CRH(tr, pre, msg)
     state.absorb(tr);
