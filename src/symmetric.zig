@@ -7,11 +7,23 @@ const Shake256 = std.crypto.hash.sha3.Shake256;
 pub const Shake128_state = struct {
     state: Shake128,
     s: [25]u64,
+    pub fn absorb(self: *Shake128_state, data: []const u8) void {
+        self.state.st.absorb(data);
+    }
+    pub fn squeeze(self: *Shake128_state, data: []u8) void {
+        self.state.st.squeeze(data);
+    }
 };
 
 pub const Shake256_state = struct {
     state: Shake256,
     s: [25]u64,
+    pub fn absorb(self: *Shake256_state, data: []const u8) void {
+        self.state.st.absorb(data);
+    }
+    pub fn squeeze(self: *Shake256_state, data: []u8) void {
+        self.state.st.squeeze(data);
+    }
 };
 
 pub fn init128() Shake128_state {
@@ -46,12 +58,4 @@ pub fn dilithium_shake256_stream_init(state: *Shake256_state, seed: [params.CRHB
     Shake128.update(state.state, &seed);
     Shake128.update(state.state, &t);
     Shake128.final(state.state, state.s);
-}
-
-pub fn absorb(state: *Shake256_state, data: []const u8) void {
-    state.state.st.absorb(data);
-}
-
-pub fn squeeze(state: *Shake256_state, data: []u8) void {
-    state.state.st.squeeze(data);
 }
