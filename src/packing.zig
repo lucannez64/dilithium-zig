@@ -65,36 +65,39 @@ pub fn pack_sk(sk: [params.CRYPTO_SECRETKEYBYTES]u8, rho: [params.SEEDBYTES]u8, 
     }
 }
 
-pub fn unpack_sk(rho: [params.SEEDBYTES]u8, tr: [params.TRBYTES]u8, key: [params.SEEDBYTES]u8, t0: *polyvec.polyveck, s1: *polyvec.polyvecl, s2: *polyvec.polyveck, sk: [params.CRYPTO_SECRETKEYBYTES]u8) void {
+pub fn unpack_sk(rho: *[params.SEEDBYTES]u8, tr: *[params.TRBYTES]u8, key: *[params.SEEDBYTES]u8, t0: *polyvec.polyveck, s1: *polyvec.polyvecl, s2: *polyvec.polyveck, sk: [params.CRYPTO_SECRETKEYBYTES]u8) void {
     var i: usize = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
-        rho[i] = sk[i];
+        rho[i].* = sk[i];
     }
-    sk += params.SEEDBYTES;
+    sk = sk[params.SEEDBYTES..].*;
 
     i = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
-        key[i] = sk[i];
+        key[i].* = sk[i];
     }
-    sk += params.SEEDBYTES;
+    sk = sk[params.SEEDBYTES..].*;
 
     i = 0;
     while (i < params.TRBYTES) : (i += 1) {
-        tr[i] = sk[i];
+        tr[i].* = sk[i];
     }
-    sk += params.TRBYTES;
+
+    sk = sk[params.TRBYTES..].*;
 
     i = 0;
     while (i < params.L) : (i += 1) {
         poly.polyeta_unpack(&s1.vec[i], sk + i * params.POLYETA_PACKEDBYTES);
     }
-    sk += params.L * params.POLYETA_PACKEDBYTES;
+
+    sk = sk[params.L * params.POLYETA_PACKEDBYTES ..].*;
 
     i = 0;
     while (i < params.K) : (i += 1) {
         polyvec.unpack(&s2.vec[i], sk + i * params.POLYT0_PACKEDBYTES);
     }
-    sk += params.K * params.POLYT0_PACKEDBYTES;
+
+    sk = sk[params.K * params.POLYT0_PACKEDBYTES ..].*;
 
     i = 0;
     while (i < params.K) : (i += 1) {
@@ -107,13 +110,15 @@ pub fn pack_sig(sig: [params.CRYPTO_BYTES]u8, c: [params.CTILDEBYTES]u8, z: *con
     while (i < params.CTILDEBYTES) : (i += 1) {
         sig[i] = c[i];
     }
-    sig += params.CTILDEBYTES;
+
+    sig = sig[params.CTILDEBYTES..].*;
 
     i = 0;
     while (i < params.L) : (i += 1) {
         poly.polyeta_pack(sig + i * params.POLYETA_PACKEDBYTES, &z.vec[i]);
     }
-    sig += params.L * params.POLYETA_PACKEDBYTES;
+
+    sig = sig[params.L * params.POLYETA_PACKEDBYTES ..].*;
 
     i = 0;
     while (i < params.OMEGA + params.K) : (i += 1) {
@@ -138,13 +143,13 @@ pub fn unpack_sig(c: [params.CTILDEBYTES]u8, z: *polyvec.polyvecl, h: *polyvec.p
     while (i < params.CTILDEBYTES) : (i += 1) {
         c[i] = sig[i];
     }
-    sig += params.CTILDEBYTES;
+    sig = sig[params.CTILDEBYTES..].*;
 
     i = 0;
     while (i < params.L) : (i += 1) {
         poly.polyeta_unpack(&z.vec[i], sig + i * params.POLYETA_PACKEDBYTES);
     }
-    sig += params.L * params.POLYETA_PACKEDBYTES;
+    sig = sig[params.L * params.POLYETA_PACKEDBYTES ..].*;
 
     var k: usize = 0;
     i = 0;

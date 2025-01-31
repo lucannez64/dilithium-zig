@@ -81,7 +81,7 @@ pub fn crypto_sign_signature_internal(
     var h: polyvec.polyveck = undefined;
     var cp: poly.poly = undefined;
     var ctx = symmetric.init256();
-    var state = ctx.state;
+    var state = ctx.state.st;
     rho = buffer[0..params.SEEDBYTES];
     tr = buffer[params.SEEDBYTES .. params.SEEDBYTES + params.TRBYTES];
     key = buffer[params.SEEDBYTES + params.TRBYTES .. params.SEEDBYTES + params.TRBYTES + params.SEEDBYTES];
@@ -99,7 +99,7 @@ pub fn crypto_sign_signature_internal(
 
     // Compute rhoprime = CRH(key, rnd, mu)
     ctx = symmetric.init256();
-    state = ctx.state;
+    state = ctx.state.st;
     state.absorb(key);
     state.absorb(rnd);
     state.absorb(mu);
@@ -130,7 +130,7 @@ pub fn crypto_sign_signature_internal(
         polyvec.polyveck_pack_w1(sig, &w1);
 
         ctx = symmetric.init256();
-        state = ctx.state;
+        state = ctx.state.st;
         state.absorb(mu);
         state.absorb(sig[0 .. params.K * params.POLYW1_PACKEDBYTES]);
         state.finalize();
@@ -238,7 +238,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
     }
     state.hash(pk, mu[0..params.TRBYTES], .{});
     ctx = symmetric.init256();
-    state = ctx.state;
+    state = ctx.state.st;
     state.absorb(mu[0..params.TRBYTES]);
     state.absorb(pre);
     state.absorb(m);
@@ -259,7 +259,7 @@ pub fn crypto_sign_verify_internal(sig: []const u8, m: []const u8, pre: []u8, pk
     polyvec.polyveck_use_hint(&w1, &w1, &h);
     polyvec.polyveck_pack_w1(&buf, &w1);
     ctx = symmetric.init256();
-    state = ctx.state;
+    state = ctx.state.st;
     state.absorb(mu);
     state.absorb(buf);
     state.finalize();
