@@ -65,7 +65,7 @@ pub fn pack_sk(sk: *[params.CRYPTO_SECRETKEYBYTES]u8, rho: [params.SEEDBYTES]u8,
     }
 }
 
-pub fn unpack_sk(rho: *[params.SEEDBYTES]u8, tr: *[params.TRBYTES]u8, key: *[params.SEEDBYTES]u8, t0: *polyvec.polyveck, s1: *polyvec.polyvecl, s2: *polyvec.polyveck, sk: *[params.CRYPTO_SECRETKEYBYTES]u8) void {
+pub fn unpack_sk(rho: *[params.SEEDBYTES]u8, tr: *[params.TRBYTES]u8, key: *[params.SEEDBYTES]u8, t0: *polyvec.polyveck, s1: *polyvec.polyvecl, s2: *polyvec.polyveck, sk: *const [params.CRYPTO_SECRETKEYBYTES]u8) void {
     var i: usize = 0;
     while (i < params.SEEDBYTES) : (i += 1) {
         rho[i] = sk[i];
