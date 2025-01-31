@@ -8,7 +8,8 @@ pub fn dilithium5_keypair(pk: *[]u8, sk: *[]u8) void {
 }
 
 pub fn dilithium5_sign(sk: []const u8, msg: []const u8, sig: *[]u8, ctx: []const u8) sign.SignatureError!void {
-    _ = try sign.crypto_sign_signature(sig, msg, ctx, sk);
+    const a = try sign.crypto_sign_signature(sig, msg, ctx, sk);
+    if (a != 0) return error.SignatureError;
 }
 
 pub fn dilithium5_verify(pk: []const u8, msg: []const u8, sig: []const u8, ctx: []const u8) sign.SignatureError!bool {
