@@ -87,13 +87,13 @@ pub fn unpack_sk(rho: *[params.SEEDBYTES]u8, tr: *[params.TRBYTES]u8, key: *[par
 
     i = 0;
     while (i < params.K) : (i += 1) {
-        polyvec.unpack(&s2.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..]);
+        poly.polyeta_unpack(&s2.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..]);
         j += 1;
     }
 
     i = 0;
     while (i < params.K) : (i += 1) {
-        polyvec.unpack(&t0.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..]);
+        poly.polyt0_unpack(&t0.vec[i], sk[j * params.POLYT0_PACKEDBYTES ..]);
         j += 1;
     }
 }
