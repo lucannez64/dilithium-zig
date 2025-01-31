@@ -95,7 +95,7 @@ pub fn crypto_sign_signature_internal(
     state.absorb(pre);
     state.absorb(m);
     ctx.final();
-    state.squeeze(&mu);
+    state.squeeze(mu);
 
     // Compute rhoprime = CRH(key, rnd, mu)
     ctx = symmetric.init256();
