@@ -23,7 +23,7 @@ pub fn crypto_sign_keypair(pk: []u8, sk: []u8) void {
     var t0: polyvec.polyveck = undefined;
 
     const rand = std.crypto.random;
-    randombytes(rand, seedbuf);
+    randombytes(rand, &seedbuf);
     seedbuf[params.SEEDBYTES] = params.K;
     seedbuf[params.SEEDBYTES + 1] = params.L;
     const seed = seedbuf[0 .. params.SEEDBYTES + 2];
@@ -195,8 +195,8 @@ pub fn crypto_sign_signature(sig: *[]u8, m: []const u8, ctx: []const u8, sk: []c
     while (i < ctx.len) : (i += 1) {
         pre[i + 2] = ctx[i];
     }
-    var r = std.crypto.random;
-    randombytes(&r, rnd);
+    const r = std.crypto.random;
+    randombytes(r, &rnd);
     crypto_sign_signature_internal(sig, sig.len, m, &pre[0 .. 2 + ctx.len], &rnd, sk);
 }
 
