@@ -1,4 +1,5 @@
 const std = @import("std");
+pub const params = @import("params.zig");
 const sign = @import("sign.zig");
 const testing = std.testing;
 
